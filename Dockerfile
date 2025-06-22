@@ -2,18 +2,18 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Copia tudo para o /app
+# Copia os arquivos do projeto
 COPY . .
 
-# Muda para a pasta onde está o app real
-WORKDIR /app/src
-
-# Instala as dependências corretamente
+# Instala as dependências a partir da raiz, onde está o requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Porta que o Railway fornece via env.PORT
+# Define variáveis de ambiente para Railway
 ENV PORT=8880
 EXPOSE ${PORT}
 
-# Executa com uvicorn (precisa instalar uvicorn no requirements se ainda não tiver)
+# Entra na pasta src onde está o main.py
+WORKDIR /app/src
+
+# Roda o app usando uvicorn
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8880"]
