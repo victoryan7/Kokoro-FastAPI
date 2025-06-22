@@ -1,18 +1,19 @@
-# Dockerfile para Kokoro (FastAPI + uvicorn)
 FROM python:3.10-slim
 
 WORKDIR /app
 
-# Copia os arquivos do projeto
+# Copia tudo para o /app
 COPY . .
 
-# Instala dependências
+# Muda para a pasta onde está o app real
+WORKDIR /app/src
+
+# Instala as dependências corretamente
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Define a porta que o Railway vai expor (Railway usa env.PORT)
+# Porta que o Railway fornece via env.PORT
 ENV PORT=8880
-
 EXPOSE ${PORT}
 
-# Comando para iniciar o app com uvicorn
+# Executa com uvicorn (precisa instalar uvicorn no requirements se ainda não tiver)
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8880"]
